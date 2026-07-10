@@ -101,13 +101,24 @@ DATABASES = {
     'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/bolstersafari.db')
 }
 
-# Connection pooling: reuse DB connections across requests (60s lifetime)
-# Critical for Supabase to avoid new TCP handshake on every request
-DATABASES['default']['CONN_MAX_AGE'] = 60
-DATABASES['default']['CONN_HEALTH_CHECKS'] = True
+# ── Supabase / Pooler compatibility ───────────────────────────
+# Supabase Transaction Pooler (port 6543) is IPv4-compatible and
+# required when deploying on platforms like Render that don't support IPv6.
+# IMPORTANT: Transaction poolers do NOT support persistent connections.
+# CONN_MAX_AGE must be 0 — otherwise Django will try to reuse a connection
+# that the pooler has already discarded, causing OperationalError crashes.
+db_host = DATABASES['default'].get('HOST', '')
+db_port = DATABASES['default'].get('PORT', 5432)
 
-# Supabase requires SSL — add if not already in DATABASE_URL
-if 'supabase' in DATABASES['default'].get('HOST', ''):
+if 'supabase' in db_host or 'pooler.supabase.com' in db_host:
+    # Transaction pooler (port 6543) — no persistent connections allowed
+    if str(db_port) == '6543':
+        DATABASES['default']['CONN_MAX_AGE'] = 0   # MUST be 0 for transaction pooler
+    else:
+        # Direct connection (port 5432) — allow connection reuse
+        DATABASES['default']['CONN_MAX_AGE'] = 60
+        DATABASES['default']['CONN_HEALTH_CHECKS'] = True
+    # Always require SSL for Supabase connections
     DATABASES['default'].setdefault('OPTIONS', {})
     DATABASES['default']['OPTIONS'].setdefault('sslmode', 'require')
 
