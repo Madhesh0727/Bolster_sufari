@@ -1,0 +1,522 @@
+{
+  "urls": [
+    {
+      "url": "api/ai/itinerary/",
+      "module": "apps.ai_planner.views",
+      "view_name": "ai_itinerary"
+    },
+    {
+      "url": "api/admin/stats/",
+      "module": "apps.core.admin_views",
+      "view_name": "stats"
+    },
+    {
+      "url": "api/admin/upload/",
+      "module": "apps.core.admin_views",
+      "view_name": "media_upload"
+    },
+    {
+      "url": "api/admin/trips/",
+      "module": "apps.core.admin_views",
+      "view_name": "trip_list_create"
+    },
+    {
+      "url": "api/admin/trips/<uuid:pk>/",
+      "module": "apps.core.admin_views",
+      "view_name": "trip_detail"
+    },
+    {
+      "url": "api/admin/trips/new/",
+      "module": "apps.core.admin_views",
+      "view_name": "trip_create"
+    },
+    {
+      "url": "api/admin/bookings/",
+      "module": "apps.core.admin_views",
+      "view_name": "booking_list"
+    },
+    {
+      "url": "api/admin/bookings/<uuid:pk>/",
+      "module": "apps.core.admin_views",
+      "view_name": "booking_detail"
+    },
+    {
+      "url": "api/admin/users/",
+      "module": "apps.core.admin_views",
+      "view_name": "user_list"
+    },
+    {
+      "url": "api/admin/users/<uuid:pk>/",
+      "module": "apps.core.admin_views",
+      "view_name": "user_detail"
+    },
+    {
+      "url": "api/admin/users/<uuid:pk>/ban/",
+      "module": "apps.core.admin_views",
+      "view_name": "user_ban"
+    },
+    {
+      "url": "api/admin/blog/",
+      "module": "apps.core.admin_views",
+      "view_name": "blog_list_create"
+    },
+    {
+      "url": "api/admin/blog/<uuid:pk>/",
+      "module": "apps.core.admin_views",
+      "view_name": "blog_detail"
+    },
+    {
+      "url": "api/admin/coupons/",
+      "module": "apps.core.admin_views",
+      "view_name": "coupon_list_create"
+    },
+    {
+      "url": "api/admin/coupons/ai-generate/",
+      "module": "apps.core.admin_views",
+      "view_name": "coupon_ai_generate"
+    },
+    {
+      "url": "api/admin/coupons/<uuid:pk>/",
+      "module": "apps.core.admin_views",
+      "view_name": "coupon_detail"
+    },
+    {
+      "url": "api/accounts/token/",
+      "module": "apps.accounts.api_views",
+      "view_name": "token_obtain_pair"
+    },
+    {
+      "url": "api/accounts/me/",
+      "module": "apps.accounts.api_views",
+      "view_name": "current_user"
+    },
+    {
+      "url": "api/accounts/customer/register/",
+      "module": "apps.accounts.api_views",
+      "view_name": "customer_register"
+    },
+    {
+      "url": "api/accounts/customer/dashboard/",
+      "module": "apps.accounts.api_views",
+      "view_name": "customer_dashboard"
+    },
+    {
+      "url": "api/trips/",
+      "module": "apps.trips.api_views",
+      "view_name": "api_trip_list"
+    },
+    {
+      "url": "api/trips/categories/",
+      "module": "apps.trips.api_views",
+      "view_name": "api_trip_categories"
+    },
+    {
+      "url": "api/trips/destinations/",
+      "module": "apps.trips.api_views",
+      "view_name": "api_destination_list"
+    },
+    {
+      "url": "api/trips/<slug:slug>/",
+      "module": "apps.trips.api_views",
+      "view_name": "api_trip_detail"
+    },
+    {
+      "url": "api/bookings/create/",
+      "module": "apps.bookings.api_views",
+      "view_name": "api_booking_create"
+    },
+    {
+      "url": "api/bookings/verify/",
+      "module": "apps.bookings.api_views",
+      "view_name": "api_booking_verify"
+    },
+    {
+      "url": "api/bookings/coupon/validate/",
+      "module": "apps.bookings.api_views",
+      "view_name": "api_coupon_validate"
+    },
+    {
+      "url": "api/bookings/<str:ref>/",
+      "module": "apps.bookings.api_views",
+      "view_name": "api_booking_detail"
+    },
+    {
+      "url": "api/blog/",
+      "module": "apps.blog.api_views",
+      "view_name": "api_blog_list"
+    },
+    {
+      "url": "api/blog/<slug:slug>/",
+      "module": "apps.blog.api_views",
+      "view_name": "api_blog_detail"
+    },
+    {
+      "url": "api/reviews/<slug:slug>/",
+      "module": "apps.reviews.api_views",
+      "view_name": "review_list"
+    },
+    {
+      "url": "api/reviews/submit/",
+      "module": "apps.reviews.api_views",
+      "view_name": "review_create"
+    },
+    {
+      "url": "api/wishlist/",
+      "module": "apps.wishlist.api_views",
+      "view_name": "wishlist_list"
+    },
+    {
+      "url": "api/wishlist/toggle/",
+      "module": "apps.wishlist.api_views",
+      "view_name": "wishlist_toggle"
+    },
+    {
+      "url": "api/settings/public/",
+      "module": "apps.trips.api_views",
+      "view_name": "api_public_settings"
+    }
+  ],
+  "models": [
+    {
+      "app": "apps.core",
+      "model": "ForensicLog",
+      "fields": [
+        "id",
+        "event_type",
+        "user",
+        "username_attempted",
+        "ip_address",
+        "user_agent",
+        "path",
+        "method",
+        "description",
+        "payload",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.accounts",
+      "model": "User",
+      "fields": [
+        "logentry",
+        "outstandingtoken",
+        "forensic_logs",
+        "referred_bookings",
+        "reviews",
+        "referral_clicks",
+        "mediaitem",
+        "blogpost",
+        "created_tickets",
+        "verified_tickets",
+        "ticket_status_changes",
+        "notifications",
+        "wishlist",
+        "password",
+        "last_login",
+        "is_superuser",
+        "username",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "date_joined",
+        "id",
+        "email",
+        "full_name",
+        "phone",
+        "whatsapp",
+        "role",
+        "avatar_url",
+        "is_active",
+        "created_at",
+        "updated_at",
+        "groups",
+        "user_permissions"
+      ]
+    },
+    {
+      "app": "apps.accounts",
+      "model": "WhatsAppGroup",
+      "fields": [
+        "id",
+        "group_link",
+        "description",
+        "is_active",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.trips",
+      "model": "Destination",
+      "fields": [
+        "trips",
+        "id",
+        "name",
+        "country",
+        "description",
+        "hero_image_url",
+        "is_featured",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.trips",
+      "model": "Trip",
+      "fields": [
+        "dates",
+        "bookings",
+        "reviews",
+        "referralclick",
+        "wishlisted_by",
+        "id",
+        "title",
+        "slug",
+        "destination",
+        "destination_text",
+        "category",
+        "description",
+        "days",
+        "nights",
+        "base_price",
+        "max_capacity",
+        "current_bookings",
+        "food_included",
+        "stay_details",
+        "itinerary",
+        "highlights",
+        "gallery",
+        "cover_image_url",
+        "is_active",
+        "is_featured",
+        "agency_name",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "app": "apps.trips",
+      "model": "TripDate",
+      "fields": [
+        "bookings",
+        "id",
+        "trip",
+        "start_date",
+        "end_date",
+        "available_seats",
+        "price_override",
+        "is_active"
+      ]
+    },
+    {
+      "app": "apps.bookings",
+      "model": "Booking",
+      "fields": [
+        "additional_travelers",
+        "eticket",
+        "id",
+        "booking_ref",
+        "trip",
+        "trip_date",
+        "customer_name",
+        "customer_email",
+        "customer_phone",
+        "customer_whatsapp",
+        "customer_age",
+        "customer_aadhar",
+        "customer_dob",
+        "number_of_people",
+        "base_amount",
+        "margin_amount",
+        "coupon",
+        "coupon_discount",
+        "total_amount",
+        "razorpay_order_id",
+        "razorpay_payment_id",
+        "razorpay_signature",
+        "payment_status",
+        "ticket_sent",
+        "admin_notes",
+        "referred_by",
+        "created_at",
+        "verified_at"
+      ]
+    },
+    {
+      "app": "apps.bookings",
+      "model": "AdditionalTraveler",
+      "fields": [
+        "id",
+        "booking",
+        "name",
+        "aadhar",
+        "dob",
+        "age"
+      ]
+    },
+    {
+      "app": "apps.reviews",
+      "model": "Review",
+      "fields": [
+        "id",
+        "trip",
+        "user",
+        "reviewer_name",
+        "reviewer_avatar",
+        "rating",
+        "comment",
+        "is_verified",
+        "is_published",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.referrals",
+      "model": "ReferralClick",
+      "fields": [
+        "id",
+        "referrer",
+        "trip",
+        "ip_address",
+        "user_agent",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.media_gallery",
+      "model": "MediaItem",
+      "fields": [
+        "id",
+        "title",
+        "media_type",
+        "file",
+        "url",
+        "thumbnail_url",
+        "tag",
+        "sort_order",
+        "created_by",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.media_gallery",
+      "model": "BlogPost",
+      "fields": [
+        "id",
+        "title",
+        "slug",
+        "author",
+        "cover_image_url",
+        "content",
+        "excerpt",
+        "tags",
+        "status",
+        "published_at",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "app": "apps.tickets",
+      "model": "ETicket",
+      "fields": [
+        "status_logs",
+        "id",
+        "ticket_number",
+        "verification_token",
+        "booking",
+        "trip_title",
+        "trip_destination",
+        "trip_dates",
+        "trip_duration",
+        "trip_cover_image",
+        "traveler_name",
+        "traveler_email",
+        "traveler_phone",
+        "number_of_people",
+        "total_amount",
+        "itinerary_snapshot",
+        "inclusions_snapshot",
+        "meeting_point",
+        "meeting_time",
+        "pickup_details",
+        "emergency_contact",
+        "special_notes",
+        "status",
+        "created_by",
+        "issued_to_email",
+        "issued_at",
+        "verified_by",
+        "verified_at",
+        "verification_location",
+        "checked_in_at",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "app": "apps.tickets",
+      "model": "TicketStatusLog",
+      "fields": [
+        "id",
+        "ticket",
+        "from_status",
+        "to_status",
+        "changed_by",
+        "notes",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.notifications",
+      "model": "Notification",
+      "fields": [
+        "id",
+        "recipient",
+        "notification_type",
+        "title",
+        "message",
+        "data",
+        "is_read",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.notifications",
+      "model": "SiteSetting",
+      "fields": [
+        "key",
+        "value",
+        "updated_at"
+      ]
+    },
+    {
+      "app": "apps.wishlist",
+      "model": "Wishlist",
+      "fields": [
+        "id",
+        "user",
+        "trip",
+        "created_at"
+      ]
+    },
+    {
+      "app": "apps.coupons",
+      "model": "Coupon",
+      "fields": [
+        "bookings",
+        "id",
+        "code",
+        "description",
+        "discount_type",
+        "discount_value",
+        "min_amount",
+        "max_discount",
+        "max_uses",
+        "used_count",
+        "valid_from",
+        "valid_until",
+        "is_active",
+        "created_at"
+      ]
+    }
+  ]
+}

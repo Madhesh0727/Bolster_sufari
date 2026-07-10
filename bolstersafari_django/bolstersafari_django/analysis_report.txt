@@ -1,0 +1,3 @@
+apps/core/middleware.py: Line 71: Empty except block (silenced exception).
+apps/bookings/serializers.py: Line 79: Empty except block (silenced exception).
+apps/bookings/serializers.py: Line 100: Empty except block (silenced exception).

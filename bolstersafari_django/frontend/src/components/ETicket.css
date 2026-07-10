@@ -1,0 +1,240 @@
+.ticket-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.download-btn {
+  background: #d4a340;
+  color: #051d38;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(212, 163, 64, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ticket {
+  width: 100%;
+  max-width: 430px;
+  box-sizing: border-box;
+  margin: auto;
+  background: #061B35;
+  border-radius: 25px;
+  padding: 12px;
+  font-family: 'Arial', sans-serif;
+  color: white;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* World Map Watermark Overlay */
+.ticket::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNDAwIDQwMCI+PHBhdGggZD0iTTUwIDE1MEMxMDAgMTIwIDE1MCAyMDAgMjUwIDE4MEMzNTAgMTYwIDM4MCAyNTAgMzgwIDI1MEMzODAgMjUwIDMwMCAzMDAgMjAwIDI4MEMxMDAgMjYwIDUwIDIwMCA1MCAxNTBaIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PHBhdGggZD0iTTMwMCA1MEMzMjAgMzAgMzUwIDQwIDM1MCA0MEMzNTAgNDAgMzQwIDgwIDMwMCA4MEMyNjAgODAgMjcwIDYwIDMwMCA1MFoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48cGF0aCBkPSJNMTAwIDMwMEMxMjAgMzMwIDE4MCAzNTAgMTgwIDM1MEMxODAgMzUwIDE0MCAzODAgMTAwIDM4MEM2MCAzODAgNTAgMzQwIDEwMCAzMDBaIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PC9zdmc+');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.border {
+  border: 4px solid #D6A34A;
+  border-radius: 22px;
+  padding: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Corner Elements */
+.border::before, .border::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 4px solid #D6A34A;
+}
+.border::before {
+  top: -4px; left: -4px;
+  border-right: none; border-bottom: none;
+  border-top-left-radius: 18px;
+}
+.border::after {
+  bottom: -4px; right: -4px;
+  border-left: none; border-top: none;
+  border-bottom-right-radius: 18px;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0;
+  color: #D6A34A;
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.logo {
+  width: 110px;
+  margin: 20px auto;
+  display: block;
+}
+
+.gold-bar {
+  background: #D6A34A;
+  color: #061B35;
+  font-weight: 800;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px; /* Matches reference image which had ribbon cuts, but border-radius is fine too */
+  margin: 20px -26px; /* Bleeds out to the edge of the border container */
+  position: relative;
+  border-top: 2px solid #061B35;
+  border-bottom: 2px solid #061B35;
+}
+
+/* Ribbon cutout notches */
+.gold-bar::before, .gold-bar::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.gold-bar::before {
+  left: 0;
+  border-left: 10px solid #061B35;
+}
+.gold-bar::after {
+  right: 0;
+  border-right: 10px solid #061B35;
+}
+
+h2 {
+  text-align: center;
+  font-size: 30px;
+  margin: 20px 0;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.section {
+  margin-top: 15px;
+}
+
+.title {
+  background: transparent;
+  color: #D6A34A;
+  font-weight: bold;
+  padding: 8px;
+  text-align: center;
+  font-size: 20px;
+  border-top: 1px solid rgba(214, 163, 74, 0.4);
+  border-bottom: 1px solid rgba(214, 163, 74, 0.4);
+  letter-spacing: 1.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title img {
+  width: 24px;
+  height: 24px;
+}
+
+.rows {
+  padding: 12px 0;
+}
+
+.rows div {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.rows div strong {
+  color: #a0b2c6;
+  font-weight: 600;
+}
+
+.rows div span {
+  font-weight: 700;
+  text-align: right;
+  max-width: 200px;
+}
+
+.confirmation {
+  text-align: center;
+  font-size: 18px;
+  margin: 18px 0;
+  color: #a0b2c6;
+  text-transform: uppercase;
+}
+.confirmation b {
+  color: white;
+  margin-left: 8px;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.qr {
+  text-align: center;
+}
+
+.qr p {
+  margin: 10px 0 0 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.barcode {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.signature {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signature b {
+  font-family: 'Times New Roman', serif;
+  font-size: 24px;
+  color: #D6A34A;
+  font-style: italic;
+  display: block;
+  margin-top: 5px;
+}
+
+.tribal-pattern {
+  height: 12px;
+  background: repeating-linear-gradient(45deg, #D6A34A, #D6A34A 5px, transparent 5px, transparent 10px);
+  margin: 20px -18px -18px -18px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
