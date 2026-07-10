@@ -4,9 +4,9 @@ services:
     env: python
     region: ohio
     plan: free
-    rootDir: .
-    buildCommand: "cd bolstersafari_django && pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput"
-    startCommand: "cd bolstersafari_django && gunicorn bolstersafari.wsgi --log-file -"
+    rootDir: bolstersafari_django
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn bolstersafari.wsgi --log-file -"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: "bolstersafari.settings.production"
