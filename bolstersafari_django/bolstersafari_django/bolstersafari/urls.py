@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from apps.trips.api_views import public_settings_view
 
 # Move admin to secure URL configured in .env
@@ -13,6 +14,9 @@ admin.site.site_title = "Bolster Safari"
 admin.site.index_title = "Administration"
 
 urlpatterns = [
+    # Root Landing Page
+    path('', TemplateView.as_view(template_name='index.html'), name='root_index'),
+
     # Django built-in admin at secure URL
     path(f'{settings.ADMIN_URL}/', admin.site.urls),
 
