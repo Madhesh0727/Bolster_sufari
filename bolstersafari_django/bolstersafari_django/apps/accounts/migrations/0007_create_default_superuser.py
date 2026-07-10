@@ -3,14 +3,24 @@ from django.contrib.auth.hashers import make_password
 
 def create_superuser(apps, schema_editor):
     User = apps.get_model('accounts', 'User')
-    if not User.objects.filter(username='admin').exists():
+    # Use a highly unique email to avoid conflicts with existing users
+    email = 'system_superadmin@bolstersafari.com'
+    
+    if not User.objects.filter(username='admin').exists() and not User.objects.filter(email=email).exists():
         User.objects.create(
             username='admin',
-            email='admin@bolstersafari.com',
+            email=email,
             password=make_password('Admin@12345'),
             is_staff=True,
             is_superuser=True,
             is_active=True
+        )
+    else:
+        # If admin exists, ensure the password is set correctly
+        User.objects.filter(username='admin').update(
+            password=make_password('Admin@12345'),
+            is_staff=True,
+            is_superuser=True
         )
 
 def remove_superuser(apps, schema_editor):
