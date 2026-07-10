@@ -101,15 +101,7 @@ DATABASES = {
     'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/bolstersafari.db')
 }
 
-# Connection pooling: reuse DB connections across requests (60s lifetime)
-# Critical for Supabase to avoid new TCP handshake on every request
-DATABASES['default']['CONN_MAX_AGE'] = 60
-DATABASES['default']['CONN_HEALTH_CHECKS'] = True
 
-# Supabase requires SSL — add if not already in DATABASE_URL
-if 'supabase' in DATABASES['default'].get('HOST', ''):
-    DATABASES['default'].setdefault('OPTIONS', {})
-    DATABASES['default']['OPTIONS'].setdefault('sslmode', 'require')
 
 # ── Auth ──────────────────────────────────────────────────────
 AUTH_USER_MODEL = 'accounts.User'
@@ -178,15 +170,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ── Supabase ──────────────────────────────────────────────────
-SUPABASE_URL = env('SUPABASE_URL', default='')
-SUPABASE_KEY = env('SUPABASE_KEY', default='')
-SUPABASE_SERVICE_KEY = env('SUPABASE_SERVICE_KEY', default='')
-SUPABASE_BUCKET = env('SUPABASE_BUCKET', default='bolstersafari-media')
 
-# Use Supabase storage in production
-if SUPABASE_URL and SUPABASE_KEY:
-    DEFAULT_FILE_STORAGE = 'apps.core.storage.SupabaseStorage'
 
 # ── Email ─────────────────────────────────────────────────────
 EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')

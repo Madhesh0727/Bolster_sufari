@@ -63,11 +63,8 @@ else:
     CELERY_TASK_STORE_EAGER_RESULT = True
 
 # ── Database ────────────────────────────────────────────────────
-# Connection pooling for Supabase (keeps connections alive between requests)
-DATABASES['default']['CONN_MAX_AGE'] = env.int('DB_CONN_MAX_AGE', default=60)
-DATABASES['default']['CONN_HEALTH_CHECKS'] = True
-DATABASES['default'].setdefault('OPTIONS', {})
-DATABASES['default']['OPTIONS']['sslmode'] = env('DB_SSL_MODE', default='require')
+# Using SQLite fallback from base.py
+
 
 # ── Static Files ────────────────────────────────────────────────
 # WhiteNoise handles compressed static file serving
