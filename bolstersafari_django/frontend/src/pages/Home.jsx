@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import apiClient from '../api/client';
 import TripCard from '../components/TripCard';
+import heroBg from '../assets/hero.png';
 
 export default function Home() {
   const { data: featuredTrips, isLoading } = useQuery({
@@ -30,7 +31,7 @@ export default function Home() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(rgba(28, 53, 45, 0.4), rgba(28, 53, 45, 0.7)), url("/media/landingbg.png") center/cover no-repeat',
+        background: `linear-gradient(rgba(28, 53, 45, 0.4), rgba(28, 53, 45, 0.7)), url(${heroBg}) center/cover no-repeat`,
         color: 'white',
         textAlign: 'center',
         overflow: 'hidden'
