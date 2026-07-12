@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import apiClient from '../api/client';
 import { Compass, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import logoFallback from '../media/logo.svg';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,7 @@ export default function Navbar() {
       <div className="container justify-between items-center" style={{ display: 'flex' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img 
-            src={settings?.site_logo || '/media/logo.png'} 
+            src={settings?.site_logo || logoFallback} 
             alt={settings?.site_name || 'Bolster Safari'} 
             style={{ height: '70px', width: '70px', borderRadius: '50%', objectFit: 'cover', border: '2px solid white' }} 
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
