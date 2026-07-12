@@ -74,10 +74,13 @@ else:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── CORS ────────────────────────────────────────────────────────
-# In production, only allow the real frontend domain
+# In production, allow all origins by default to support Vercel preview URLs.
+# For strict security later, set this to False and use CORS_ALLOWED_ORIGINS.
+CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=True)
+
 CORS_ALLOWED_ORIGINS = env.list(
     'CORS_ALLOWED_ORIGINS',
-    default=['https://bolstersafari.com']
+    default=[]
 )
 
 # ── Logging ─────────────────────────────────────────────────────
