@@ -1,16 +1,27 @@
 import axios from 'axios';
 
-// In development: Vite proxy handles /api requests (see vite.config.js), so baseURL is empty.
-// In production: set VITE_API_URL=https://your-backend-domain.com/api in .env
+let rawBaseUrl = import.meta.env.VITE_API_URL || '/api';
+// Ensure baseURL ends with /api/
+if (rawBaseUrl.endsWith('/api')) {
+  rawBaseUrl += '/';
+} else if (!rawBaseUrl.endsWith('/api/')) {
+  rawBaseUrl = rawBaseUrl.replace(/\/$/, '') + '/api/';
+}
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: rawBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request Interceptor: Attach JWT Token (try customerToken first, fallback to adminToken)
+// Request Interceptor: Attach JWT Token and fix URL formatting
 apiClient.interceptors.request.use((config) => {
+  // Prevent leading slash from overriding the baseURL path (e.g. /api/)
+  if (config.url && config.url.startsWith('/')) {
+    config.url = config.url.substring(1);
+  }
+  
   const token = localStorage.getItem('customerToken') || localStorage.getItem('adminToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
