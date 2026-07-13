@@ -117,15 +117,19 @@ def booking_verify_payment_api(request):
         booking.verified_at = timezone.now()
         booking.save()
 
-        # Send notification
-        notify_admins.delay(
-            notification_type='booking_confirmed',
-            title=f'New Booking Verified: {booking.booking_ref}',
-            message=f'Payment of ₹{booking.total_amount} received from {booking.customer_name}.',
-            data={'booking_id': str(booking.id), 'booking_ref': booking.booking_ref}
-        )
-
         logger.info(f'Payment verified for booking: {booking.booking_ref}')
+
+        # Send notification (non-critical — don't let this crash the payment flow)
+        try:
+            notify_admins.delay(
+                notification_type='booking_confirmed',
+                title=f'New Booking Verified: {booking.booking_ref}',
+                message=f'Payment of ₹{booking.total_amount} received from {booking.customer_name}.',
+                data={'booking_id': str(booking.id), 'booking_ref': booking.booking_ref}
+            )
+        except Exception as notify_err:
+            logger.warning(f'Failed to send admin notification for {booking.booking_ref}: {notify_err}')
+
         return Response({'status': 'verified', 'booking_ref': booking.booking_ref})
 
     except razorpay.errors.SignatureVerificationError:
