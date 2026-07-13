@@ -9,16 +9,22 @@ from .base import *
 
 # ── Security ────────────────────────────────────────────────────
 DEBUG = False
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    'bolster-sufari.onrender.com',
+    '.onrender.com',
+])
 
-# Block direct browser access to Render backend — only allow API, media, admin, static paths
+# CORS must be as early as possible — before any middleware that can generate responses
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',      # ← MUST be before WhiteNoise/APIOnly/Common
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'apps.core.middleware.APIOnlyMiddleware',   # ← blocks non-API direct access
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'apps.core.middleware.APIOnlyMiddleware',      # ← moved AFTER CORS so preflight gets headers
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -92,14 +98,42 @@ else:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── CORS ────────────────────────────────────────────────────────
-# In production, allow all origins by default to support Vercel preview URLs.
-# For strict security later, set this to False and use CORS_ALLOWED_ORIGINS.
+# Allow all origins to support Vercel preview URLs (each deploy gets a unique subdomain).
 CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=True)
 
+# Explicit allowed origins (used when CORS_ALLOW_ALL_ORIGINS is False)
 CORS_ALLOWED_ORIGINS = env.list(
     'CORS_ALLOWED_ORIGINS',
-    default=[]
+    default=['https://bolster-sufari.vercel.app']
 )
+
+# Also allow any Vercel preview subdomain
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://bolster-sufari.*\.vercel\.app$',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 # ── Logging ─────────────────────────────────────────────────────
 LOGGING['root']['level'] = 'WARNING'

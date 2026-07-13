@@ -63,11 +63,11 @@ def trip_categories_view(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+@cache_page(60 * 15)
 def public_settings_view(request):
     import os
     from apps.notifications.models import SiteSetting
     from apps.media_gallery.models import MediaItem
-    from django.conf import settings as settings_conf
 
     settings_qs = SiteSetting.objects.all()
     settings = {s.key: s.value for s in settings_qs}
@@ -90,7 +90,5 @@ def public_settings_view(request):
         'happy_travelers': settings.get('happy_travelers', '1200'),
         'footer_description': settings.get('footer_description', 'Experience the adventure of a lifetime with our carefully curated safari and travel packages.'),
         'gallery': gallery_data,
-        'debug_cors': getattr(settings_conf, 'CORS_ALLOWED_ORIGINS', []),
-        'debug_cors_all': getattr(settings_conf, 'CORS_ALLOW_ALL_ORIGINS', False),
     })
 
