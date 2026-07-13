@@ -1,26 +1,29 @@
 from django.db import migrations
 from django.contrib.auth.hashers import make_password
 
+import os
+
 def create_superuser(apps, schema_editor):
     User = apps.get_model('accounts', 'User')
-    # Use a highly unique email to avoid conflicts with existing users
-    email = 'system_superadmin@bolstersafari.com'
-    
-    if not User.objects.filter(username='admin').exists() and not User.objects.filter(email=email).exists():
+    if not User.objects.filter(username='admin').exists():
+        password = os.environ.get('ADMIN_PASSWORD', 'fallback_secure_123')
         User.objects.create(
             username='admin',
-            email=email,
-            password=make_password('Admin@12345'),
+            email='admin@bolstersafari.com',
             is_staff=True,
             is_superuser=True,
-            is_active=True
+            is_active=True,
+            password=make_password(password),
         )
-    else:
-        # If admin exists, ensure the password is set correctly
-        User.objects.filter(username='admin').update(
-            password=make_password('Admin@12345'),
+    if not User.objects.filter(email='madhesh@example.com').exists():
+        password = os.environ.get('ADMIN_PASSWORD', 'fallback_secure_123')
+        User.objects.create(
+            username='madhesh',
+            email='madhesh@example.com',
             is_staff=True,
-            is_superuser=True
+            is_superuser=True,
+            is_active=True,
+            password=make_password(password),
         )
 
 def remove_superuser(apps, schema_editor):
