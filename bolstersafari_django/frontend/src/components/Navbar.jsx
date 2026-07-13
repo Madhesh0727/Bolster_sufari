@@ -38,6 +38,7 @@ export default function Navbar() {
           <Link to="/" style={{ fontWeight: 500, color: 'white' }}>Home</Link>
           <Link to="/trips" style={{ fontWeight: 500, color: 'white' }}>Destinations</Link>
           <Link to="/blog" style={{ fontWeight: 500, color: 'white' }}>Blog</Link>
+          <Link to="/about" style={{ fontWeight: 500, color: 'white' }}>About</Link>
           <Link to="/ai-planner" style={{ fontWeight: 500, color: 'var(--color-primary)' }}>✨ AI Planner</Link>
         </div>
 
@@ -55,8 +56,9 @@ export default function Navbar() {
       {isOpen && (
         <div className="mobile-menu-dropdown" style={{ backgroundColor: 'var(--color-secondary-light)', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Link to="/" onClick={() => setIsOpen(false)} style={{ color: 'white', fontWeight: 500, fontSize: '1.1rem' }}>Home</Link>
-          <Link to="/trips" onClick={() => setIsOpen(false)} style={{ color: 'white', fontWeight: 500, fontSize: '1.1rem' }}>Trips</Link>
+          <Link to="/trips" onClick={() => setIsOpen(false)} style={{ color: 'white', fontWeight: 500, fontSize: '1.1rem' }}>Destinations</Link>
           <Link to="/blog" onClick={() => setIsOpen(false)} style={{ color: 'white', fontWeight: 500, fontSize: '1.1rem' }}>Blog</Link>
+          <Link to="/about" onClick={() => setIsOpen(false)} style={{ color: 'white', fontWeight: 500, fontSize: '1.1rem' }}>About</Link>
           <Link to="/ai-planner" onClick={() => setIsOpen(false)} style={{ color: 'white', fontWeight: 500, fontSize: '1.1rem' }}>AI Planner</Link>
         </div>
       )}

@@ -65,8 +65,8 @@ def trip_categories_view(request):
 @permission_classes([AllowAny])
 @cache_page(60 * 15)
 def public_settings_view(request):
+    import os
     from apps.notifications.models import SiteSetting
-
     from apps.media_gallery.models import MediaItem
 
     settings_qs = SiteSetting.objects.all()
@@ -78,12 +78,13 @@ def public_settings_view(request):
     gallery = MediaItem.objects.filter(media_type='image').order_by('sort_order')[:12]
     gallery_data = [{'id': str(g.id), 'url': g.media_url, 'title': g.title} for g in gallery]
 
+    # Dynamically fetch from Admin (SiteSetting) OR Render Environment Variables OR Defaults
     return Response({
-        'site_name': settings.get('site_name', 'Bolster Safari'),
+        'site_name': settings.get('site_name', '') or os.environ.get('SITE_NAME', 'Bolster Safari'),
         'site_logo': settings.get('site_logo', ''),
-        'phone': settings.get('phone', ''),
-        'email': settings.get('email', ''),
-        'address': settings.get('address', ''),
+        'phone': settings.get('phone', '') or os.environ.get('CONTACT_PHONE', '+91 9876543210'),
+        'email': settings.get('email', '') or os.environ.get('CONTACT_EMAIL', 'hello@bolstersafari.com'),
+        'address': settings.get('address', '') or os.environ.get('CONTACT_ADDRESS', '123 Adventure Lane, Wildlife City'),
         'upi_id': settings.get('upi_id', ''),
         'qr_image': qr_image or settings.get('qr_image_url', ''),
         'happy_travelers': settings.get('happy_travelers', '1200'),

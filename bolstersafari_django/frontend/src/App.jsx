@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from './components/ProtectedRoute';
+import { Analytics } from "@vercel/analytics/react";
 
 // Placeholder Pages
 import Home from './pages/Home';
@@ -12,6 +13,8 @@ import TripDetail from './pages/TripDetail';
 import NotFound from './pages/NotFound';
 import ErrorPage from './pages/ErrorPage';
 import BookingForm from './pages/BookingForm';
+import About from './pages/About';
+
 import BookingSuccess from './pages/BookingSuccess';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
@@ -36,6 +39,7 @@ function App() {
   return (
     <Router>
       <Toaster position="top-right" />
+      <Analytics />
       <Routes>
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -76,7 +80,9 @@ function App() {
             <main style={{ flex: 1 }}>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/trips" element={<Trips />} />
+
                 <Route path="/ticket/:bookingRef" element={<TicketView />} />
 
                 <Route path="/trip/:slug" element={<TripDetail />} />
