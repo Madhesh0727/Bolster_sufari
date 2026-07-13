@@ -1,27 +1,23 @@
 import axios from 'axios';
 
-let rawBaseUrl = import.meta.env.VITE_API_URL || '/api';
-// Ensure baseURL ends with /api/
-if (rawBaseUrl.endsWith('/api')) {
-  rawBaseUrl += '/';
-} else if (!rawBaseUrl.endsWith('/api/')) {
-  rawBaseUrl = rawBaseUrl.replace(/\/$/, '') + '/api/';
-}
-
+// Always use relative /api/ path.
+// - In development: Vite proxy (vite.config.js) forwards /api/* to the backend.
+// - In production: Vercel rewrites (vercel.json) proxy /api/* to Render server-side.
+// This avoids ALL cross-origin (CORS) issues because the browser only talks to the same domain.
 const apiClient = axios.create({
-  baseURL: rawBaseUrl,
+  baseURL: '/api/',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request Interceptor: Attach JWT Token and fix URL formatting
+// Request Interceptor: Attach JWT Token and normalize URL
 apiClient.interceptors.request.use((config) => {
-  // Prevent leading slash from overriding the baseURL path (e.g. /api/)
+  // Strip leading slash to prevent overriding the /api/ base path
   if (config.url && config.url.startsWith('/')) {
     config.url = config.url.substring(1);
   }
-  
+
   const token = localStorage.getItem('customerToken') || localStorage.getItem('adminToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -46,3 +42,4 @@ apiClient.interceptors.response.use((response) => {
 });
 
 export default apiClient;
+
