@@ -16,6 +16,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             if not user.is_active:
                 raise AuthenticationFailed("Your account has been suspended or banned.")
 
+        # Pass the real username so SimpleJWT's authenticate() finds the user
+        if user:
+            attrs['username'] = user.username
         try:
             return super().validate(attrs)
         except AuthenticationFailed:
@@ -43,6 +46,8 @@ class AdminTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not user.is_staff:
             raise AuthenticationFailed("Access denied. Admin privileges required.")
 
+        # Pass the real username so SimpleJWT's authenticate() finds the user
+        attrs['username'] = user.username
         try:
             return super().validate(attrs)
         except AuthenticationFailed:
