@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from apps.accounts.serializers import CurrentUserSerializer, CustomTokenObtainPairSerializer
+from apps.accounts.serializers import CurrentUserSerializer, CustomTokenObtainPairSerializer, AdminTokenObtainPairSerializer
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -21,7 +21,14 @@ class CurrentUserAPIView(generics.RetrieveUpdateAPIView):
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+    """Customer login — no staff requirement."""
     serializer_class = CustomTokenObtainPairSerializer
+    throttle_classes = [AnonRateThrottle]
+
+
+class AdminTokenObtainPairView(TokenObtainPairView):
+    """Admin panel login — requires is_staff=True."""
+    serializer_class = AdminTokenObtainPairSerializer
     throttle_classes = [AnonRateThrottle]
 
 

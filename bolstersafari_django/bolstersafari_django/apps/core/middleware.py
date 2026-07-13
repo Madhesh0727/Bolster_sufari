@@ -1,11 +1,54 @@
 """
 Core Middleware — BolsterSafari
-Site settings injection + Referral tracking
+Site settings injection + Referral tracking + API-only backend guard
 """
 import logging
 from django.utils.deprecation import MiddlewareMixin
+from django.http import JsonResponse
+from django.conf import settings
 
 logger = logging.getLogger('apps.core')
+
+
+class APIOnlyMiddleware(MiddlewareMixin):
+    """
+    Blocks direct browser access to the Render backend URL.
+    Only allows:
+      - /api/*  — REST API calls (from Vercel frontend)
+      - /media/*  — media files
+      - /<ADMIN_URL>/*  — Django admin panel
+      - /static/*  — static files
+    Rejects any other request that looks like a browser visiting the backend directly.
+    """
+
+    def process_request(self, request):
+        # Paths that are always allowed
+        allowed_prefixes = [
+            '/api/',
+            '/media/',
+            '/static/',
+            f'/{getattr(settings, "ADMIN_URL", "django-admin")}/',
+        ]
+
+        # Also allow root (Render health-check ping)
+        if request.path == '/':
+            return None
+
+        for prefix in allowed_prefixes:
+            if request.path.startswith(prefix):
+                return None
+
+        # In DEBUG mode, allow everything (local dev)
+        if settings.DEBUG:
+            return None
+
+        # Block everything else — return JSON 403 so it is not mistaken for an HTML page
+        return JsonResponse(
+            {'detail': 'Direct access to this server is not permitted.'},
+            status=403
+        )
+
+
 
 
 class SiteSettingsMiddleware(MiddlewareMixin):

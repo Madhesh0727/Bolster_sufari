@@ -11,17 +11,18 @@ export default function AdminLogin() {
   
   const onSubmit = async (data) => {
     try {
-      const response = await apiClient.post('/accounts/token/', {
+      const response = await apiClient.post('/accounts/admin/token/', {
         username: data.username,
         password: data.password
       });
       
-      // Assume the backend returns an access token
       localStorage.setItem('adminToken', response.data.access);
+      localStorage.setItem('adminRefreshToken', response.data.refresh);
       toast.success('Authentication successful');
       navigate('/admin/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Invalid credentials or unauthorized');
+      const msg = error.response?.data?.detail || 'Invalid credentials or unauthorized';
+      toast.error(msg);
     }
   };
 

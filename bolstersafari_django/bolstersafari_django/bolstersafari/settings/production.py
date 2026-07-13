@@ -11,6 +11,24 @@ from .base import *
 DEBUG = False
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
 
+# Block direct browser access to Render backend — only allow API, media, admin, static paths
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'apps.core.middleware.APIOnlyMiddleware',   # ← blocks non-API direct access
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.core.middleware.SiteSettingsMiddleware',
+    'apps.core.middleware.ReferralMiddleware',
+    'apps.core.middleware.ForensicLogMiddleware',
+]
+
+
 # HTTPS enforcement
 SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=True)
 SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS', default=31536000)  # 1 year
