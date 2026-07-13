@@ -35,8 +35,8 @@ services:
       - key: DISABLE_REDIS
         value: "1"
       - key: ADMIN_USERNAME
-        value: "admin"
+        sync: false
       - key: ADMIN_EMAIL
-        value: "admin@bolstersafari.com"
+        sync: false
       - key: ADMIN_PASSWORD
         sync: false
