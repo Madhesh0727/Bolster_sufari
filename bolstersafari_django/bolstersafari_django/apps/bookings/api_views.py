@@ -24,6 +24,7 @@ class CouponRateThrottle(AnonRateThrottle):
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([AllowAny])
+@throttle_classes([AnonRateThrottle])
 def booking_create_api(request):
     """Create a booking and initialize Razorpay Order."""
     serializer = BookingCreateSerializer(data=request.data, context={'request': request})

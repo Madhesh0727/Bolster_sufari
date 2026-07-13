@@ -21,7 +21,7 @@ export default function AdminLogin() {
       toast.success('Authentication successful');
       navigate('/admin/dashboard');
     } catch (error) {
-      const msg = error.response?.data?.detail || 'Invalid credentials or unauthorized';
+      const msg = error.customMessage || error.response?.data?.detail || 'Invalid credentials or unauthorized';
       toast.error(msg);
     }
   };
