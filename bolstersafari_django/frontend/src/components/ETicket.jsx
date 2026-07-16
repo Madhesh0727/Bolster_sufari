@@ -49,16 +49,18 @@ export default function ETicket({
     
     try {
       const canvas = await html2canvas(ticketRef.current, { 
-        scale: 3, // Premium quality
+        scale: 2, // High quality (2 is plenty for A4, 3 causes massive files)
         useCORS: true,
         backgroundColor: '#051d38', // Matches background
         logging: false
       });
       
-      const imgData = canvas.toDataURL('image/png');
+      // Use JPEG with 0.8 quality instead of uncompressed PNG
+      const imgData = canvas.toDataURL('image/jpeg', 0.8);
       
       // A4 format dimensions
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // 'compress: true' automatically compresses the PDF internal streams
+      const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
@@ -81,7 +83,7 @@ export default function ETicket({
       const xOffset = (pdfWidth - scaledWidth) / 2;
       const yOffset = (pdfHeight - scaledHeight) / 2;
       
-      pdf.addImage(imgData, 'PNG', xOffset, yOffset, scaledWidth, scaledHeight);
+      pdf.addImage(imgData, 'JPEG', xOffset, yOffset, scaledWidth, scaledHeight);
       pdf.save(`ETicket_${passenger.ticket}.pdf`);
       
     } catch (error) {

@@ -10,11 +10,14 @@ from django.views.decorators.cache import cache_page
 
 from apps.trips.models import Trip, Destination, TripCategory
 from apps.trips.serializers import TripListSerializer, TripDetailSerializer, DestinationSerializer
-
-
+from django.utils.decorators import method_decorator
 class TripListAPIView(generics.ListAPIView):
     serializer_class = TripListSerializer
     permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(60 * 15))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         qs = Trip.objects.filter(is_active=True).select_related('destination').prefetch_related('dates')
