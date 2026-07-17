@@ -37,7 +37,7 @@ export default function BlogPost() {
       <div style={{ 
         height: '50vh', 
         position: 'relative',
-        background: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7)), url(${post.cover_image_url || 'https://images.unsplash.com/photo-1547471080-7cb2ac647a35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'}) center/cover`
+        background: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7)), url(${post.thumbnail || post.cover_image_url || 'https://images.unsplash.com/photo-1547471080-7cb2ac647a35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'}) center/cover`
       }}>
         <div className="container" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', color: 'white', textAlign: 'center', padding: '0 24px' }}>
           <h1 style={{ fontSize: '3.5rem', marginBottom: '24px', maxWidth: '800px', margin: '0 auto 24px auto' }}>{post.title}</h1>
@@ -56,12 +56,21 @@ export default function BlogPost() {
 
           {post.tags && (
             <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
-              {post.tags.split(',').map(tag => (
+              {(Array.isArray(post.tags) ? post.tags : (typeof post.tags === 'string' ? post.tags.split(',') : [])).map(tag => (
                 <span key={tag} style={{ background: '#F1F5F9', color: 'var(--color-secondary)', padding: '4px 12px', borderRadius: 'var(--radius-full)', fontSize: '0.85rem' }}>
                   #{tag.trim()}
                 </span>
               ))}
             </div>
+          )}
+
+          {post.youtube_embed_code && (
+            <div 
+              style={{ marginBottom: '32px', width: '100%', aspectRatio: '16/9', borderRadius: '12px', overflow: 'hidden' }}
+              dangerouslySetInnerHTML={{ 
+                __html: post.youtube_embed_code.replace('<iframe', '<iframe style="width:100%;height:100%;border:none;"') 
+              }}
+            />
           )}
 
           <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: 'var(--color-text-main)', whiteSpace: 'pre-line' }}>

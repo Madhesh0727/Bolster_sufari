@@ -21,11 +21,24 @@ export default function BlogManager() {
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
-      const payload = { ...data, tags: typeof data.tags === 'string' ? data.tags.split(',').map(t => t.trim()).filter(Boolean) : data.tags };
+      // Use FormData to support image uploads
+      const formData = new FormData();
+      Object.keys(data).forEach(key => {
+        if (key === 'tags') {
+          const tagsArray = typeof data.tags === 'string' ? data.tags.split(',').map(t => t.trim()).filter(Boolean) : data.tags;
+          formData.append('tags', JSON.stringify(tagsArray));
+        } else if (key === 'cover_image' && data[key] instanceof File) {
+          formData.append('cover_image', data[key]);
+        } else if (data[key] !== null && data[key] !== undefined && key !== 'cover_image_url') {
+          formData.append(key, data[key]);
+        }
+      });
+
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
       if (data.id) {
-        return apiClient.patch(`/admin/blog/${data.id}/`, payload);
+        return apiClient.patch(`/admin/blog/${data.id}/`, formData, config);
       }
-      return apiClient.post('/admin/blog/', payload);
+      return apiClient.post('/admin/blog/', formData, config);
     },
     onSuccess: () => {
       qc.invalidateQueries(['adminBlog']);
@@ -41,7 +54,7 @@ export default function BlogManager() {
   });
 
   const openNew = () => { setForm(EMPTY); setEditing({}); };
-  const openEdit = (p) => { setForm({ ...p, tags: Array.isArray(p.tags) ? p.tags.join(', ') : p.tags }); setEditing(p); };
+  const openEdit = (p) => { setForm({ ...p, tags: Array.isArray(p.tags) ? p.tags.join(', ') : p.tags, cover_image: null }); setEditing(p); };
 
   if (editing !== null) {
     return (
@@ -54,21 +67,35 @@ export default function BlogManager() {
         )}
 
         <div style={{ background: 'white', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {[
-            { label: 'Title', key: 'title', placeholder: 'Your Amazing Safari Story...' },
-            { label: 'Cover Image URL', key: 'cover_image_url', placeholder: 'https://...' },
-            { label: 'Excerpt (short summary)', key: 'excerpt', placeholder: 'A short description...' },
-            { label: 'Tags (comma separated)', key: 'tags', placeholder: 'wildlife, safari, kenya' },
-          ].map(f => (
-            <div key={f.key}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>{f.label}</label>
-              <input
-                type="text" value={form[f.key]} placeholder={f.placeholder}
-                onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }}
-              />
+          
+          <div>
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>Title</label>
+            <input type="text" value={form.title} placeholder="Your Amazing Safari Story..." onChange={e => setForm(p => ({...p, title: e.target.value}))} style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1.5px solid #e2e8f0', outline: 'none' }} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>Cover Image (Upload)</label>
+              <input type="file" accept="image/*" onChange={e => setForm(p => ({...p, cover_image: e.target.files[0]}))} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1.5px dashed #cbd5e1', outline: 'none' }} />
+              {(form.thumbnail || form.cover_image_url) && !form.cover_image && (
+                <div style={{ marginTop: '8px', fontSize: '0.8rem', color: '#64748b' }}>Current image: <img src={form.thumbnail || form.cover_image_url} alt="cover" style={{height: '40px', verticalAlign: 'middle', marginLeft: '8px', borderRadius: '4px'}}/></div>
+              )}
             </div>
-          ))}
+            <div>
+              <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>Tags (comma separated)</label>
+              <input type="text" value={form.tags} placeholder="wildlife, safari, kenya" onChange={e => setForm(p => ({...p, tags: e.target.value}))} style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1.5px solid #e2e8f0', outline: 'none' }} />
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>YouTube Embed Code (Auto-plays at top of post)</label>
+            <input type="text" value={form.youtube_embed_code || ''} placeholder='<iframe src="https://www.youtube.com/embed/..." ...></iframe>' onChange={e => setForm(p => ({...p, youtube_embed_code: e.target.value}))} style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1.5px solid #e2e8f0', outline: 'none', fontFamily: 'monospace' }} />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>Excerpt (short summary)</label>
+            <textarea rows={2} value={form.excerpt} onChange={e => setForm(p => ({...p, excerpt: e.target.value}))} style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1.5px solid #e2e8f0', outline: 'none', resize: 'vertical' }} />
+          </div>
 
           <div>
             <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: '8px', fontSize: '0.875rem' }}>Content (Markdown supported)</label>

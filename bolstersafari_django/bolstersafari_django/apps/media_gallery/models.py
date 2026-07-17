@@ -44,7 +44,9 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=300)
     slug = models.SlugField(max_length=320, unique=True, blank=True)
     author = models.ForeignKey('accounts.User', null=True, on_delete=models.SET_NULL)
-    cover_image_url = models.URLField(max_length=500, blank=True)
+    cover_image_url = models.URLField(max_length=500, blank=True)       # legacy URL field
+    cover_image = models.ImageField(upload_to='blog/', null=True, blank=True)  # new file upload
+    youtube_embed_code = models.TextField(blank=True, help_text='Paste the full YouTube <iframe> embed code here')  # YouTube embed
     content = models.TextField()
     excerpt = models.TextField(blank=True, max_length=500)
     tags = models.JSONField(default=list, blank=True)

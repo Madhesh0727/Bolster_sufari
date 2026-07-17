@@ -49,12 +49,19 @@ export default function Blog() {
                     e.currentTarget.style.boxShadow = 'var(--glass-shadow)';
                   }}
                 >
-                  <div style={{ height: '200px', overflow: 'hidden' }}>
+                  <div style={{ height: '200px', overflow: 'hidden', position: 'relative' }}>
                     <img 
-                      src={post.cover_image_url || 'https://images.unsplash.com/photo-1547471080-7cb2ac647a35?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'} 
+                      src={post.thumbnail || post.cover_image_url || 'https://images.unsplash.com/photo-1547471080-7cb2ac647a35?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'} 
                       alt={post.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
+                    {post.youtube_embed_code && (
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                        <div style={{ width: '48px', height: '48px', background: 'var(--color-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', paddingLeft: '4px' }}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 3l14 9-14 9V3z"/></svg>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <h3 style={{ fontSize: '1.3rem', marginBottom: '12px', lineHeight: '1.4' }}>{post.title}</h3>

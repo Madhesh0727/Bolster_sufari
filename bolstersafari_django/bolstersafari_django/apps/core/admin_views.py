@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, parsers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -123,11 +123,14 @@ from rest_framework import serializers as drf_serializers
 
 class BlogPostAdminSerializer(drf_serializers.ModelSerializer):
     author_name = drf_serializers.SerializerMethodField()
+    cover_image = drf_serializers.ImageField(required=False, allow_null=True)
+    thumbnail = drf_serializers.SerializerMethodField()
 
     class Meta:
         model = BlogPost
         fields = [
-            'id', 'title', 'slug', 'cover_image_url', 'excerpt', 'content',
+            'id', 'title', 'slug', 'cover_image_url', 'cover_image', 'thumbnail',
+            'youtube_embed_code', 'excerpt', 'content',
             'tags', 'status', 'published_at', 'created_at', 'author_name',
         ]
         read_only_fields = ['id', 'slug', 'created_at', 'author_name']
@@ -135,11 +138,19 @@ class BlogPostAdminSerializer(drf_serializers.ModelSerializer):
     def get_author_name(self, obj):
         return obj.author.display_name if obj.author else 'Bolster Safari'
 
+    def get_thumbnail(self, obj):
+        request = self.context.get('request')
+        if obj.cover_image:
+            url = obj.cover_image.url
+            return request.build_absolute_uri(url) if request else url
+        return obj.cover_image_url or ''
+
 
 class AdminBlogListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsSuperAdmin]
     queryset = BlogPost.objects.all().order_by('-created_at')
     serializer_class = BlogPostAdminSerializer
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
 
     def perform_create(self, serializer):
         from django.utils import timezone
@@ -152,6 +163,7 @@ class AdminBlogDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsSuperAdmin]
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostAdminSerializer
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
 
     def perform_update(self, serializer):
         from django.utils import timezone
