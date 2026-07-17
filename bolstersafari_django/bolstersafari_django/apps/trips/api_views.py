@@ -30,9 +30,13 @@ class TripListAPIView(generics.ListAPIView):
                 Q(destination__name__icontains=search)
             )
         if featured == '1':
-            qs = qs.filter(is_featured=True)
+            featured_qs = qs.filter(is_featured=True)
+            if featured_qs.exists():
+                qs = featured_qs
+            else:
+                qs = qs.order_by('-created_at')[:3]
 
-        return qs.order_by('-is_featured', '-created_at')
+        return qs.order_by('-is_featured', '-created_at') if featured != '1' or featured_qs.exists() else qs
 
 
 class TripDetailAPIView(generics.RetrieveAPIView):

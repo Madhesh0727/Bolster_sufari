@@ -97,12 +97,10 @@ export default function Trips() {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '64px 0', gap: '16px' }}>
             <div style={{ border: '4px solid #f3f3f3', borderTop: '4px solid var(--color-primary)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite' }}></div>
             <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>Loading trips... (server may be waking up, please wait)</p>
           </div>
         ) : isError ? (
           <div style={{ padding: '64px 0', textAlign: 'center' }}>
-            <p style={{ color: 'var(--color-text-muted)', marginBottom: '16px' }}>Could not load trips. The server may still be waking up.</p>
-            <button className="btn btn-primary" onClick={() => refetch()}>Retry</button>
+            <p style={{ color: 'var(--color-text-muted)', marginBottom: '16px' }}>Could not load trips. Please try again later.</p>
           </div>
         ) : (
           <>
