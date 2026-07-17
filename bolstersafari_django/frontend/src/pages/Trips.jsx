@@ -17,17 +17,22 @@ export default function Trips() {
     queryFn: async () => {
       const res = await apiClient.get('/trips/categories/');
       return res.data;
-    }
+    },
+    staleTime: 15 * 60 * 1000,
+    retry: 3,
   });
 
-  const { data: trips, isLoading } = useQuery({
+  const { data: trips, isLoading, isError, refetch, fetchStatus } = useQuery({
     queryKey: ['trips', currentCategory, currentSearch],
     queryFn: async () => {
       const res = await apiClient.get('/trips/', {
         params: { category: currentCategory, q: currentSearch }
       });
       return res.data;
-    }
+    },
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 10000),
+    staleTime: 5 * 60 * 1000,
   });
 
   const handleSearch = (e) => {
@@ -88,9 +93,16 @@ export default function Trips() {
         </div>
 
         {/* Results */}
-        {isLoading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '64px 0' }}>
+        {isLoading || fetchStatus === 'fetching' ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '64px 0', gap: '16px' }}>
             <div style={{ border: '4px solid #f3f3f3', borderTop: '4px solid var(--color-primary)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite' }}></div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>Loading trips... (server may be waking up, please wait)</p>
+          </div>
+        ) : isError ? (
+          <div style={{ padding: '64px 0', textAlign: 'center' }}>
+            <p style={{ color: 'var(--color-text-muted)', marginBottom: '16px' }}>Could not load trips. The server may still be waking up.</p>
+            <button className="btn btn-primary" onClick={() => refetch()}>Retry</button>
           </div>
         ) : (
           <>

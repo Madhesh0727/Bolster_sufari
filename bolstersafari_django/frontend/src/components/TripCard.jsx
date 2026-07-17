@@ -1,8 +1,21 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Clock, Users } from 'lucide-react';
-import apiClient from '../api/client';
+import { MapPin, Clock, Users, ImageOff } from 'lucide-react';
+import { useState } from 'react';
+
+const PLACEHOLDER_STYLE = {
+  width: '100%', height: '100%',
+  display: 'flex', flexDirection: 'column',
+  alignItems: 'center', justifyContent: 'center',
+  background: 'linear-gradient(135deg, #1C352D 0%, #2D5A47 100%)',
+  color: '#8DB5A0', gap: '8px', fontSize: '0.85rem'
+};
 
 export default function TripCard({ trip }) {
+  const [imgError, setImgError] = useState(false);
+
+  // Build a proper image URL: try cover_image (already a full URL from model property),
+  // then destination hero, then show placeholder
+  const imgSrc = !imgError && (trip.cover_image || trip.destination?.hero_image_url);
 
   return (
     <Link to={`/trip/${trip.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -26,11 +39,20 @@ export default function TripCard({ trip }) {
         }}
       >
         <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-          <img 
-            src={trip.cover_image || trip.destination?.hero_image_url || 'https://via.placeholder.com/600x400?text=Safari'} 
-            alt={trip.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
+          {imgSrc ? (
+            <img 
+              src={imgSrc}
+              alt={trip.title}
+              loading="lazy"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div style={PLACEHOLDER_STYLE}>
+              <ImageOff size={32} />
+              <span>{trip.title}</span>
+            </div>
+          )}
 
           {trip.is_soldout && (
             <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'var(--color-danger)', color: 'white', padding: '4px 12px', borderRadius: 'var(--radius-full)', fontSize: '0.8rem', fontWeight: 600 }}>

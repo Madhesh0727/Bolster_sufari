@@ -1,9 +1,30 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Analytics } from "@vercel/analytics/react";
+import toast from 'react-hot-toast';
+
+// Keep-alive hook to prevent Render free-tier cold starts
+// Pings the backend health endpoint every 5 minutes
+function useServerKeepAlive() {
+  useEffect(() => {
+    const ping = async () => {
+      try {
+        await fetch('/api/trips/categories/', { method: 'GET', cache: 'no-store' });
+      } catch (_) {
+        // Silently ignore ping failures
+      }
+    };
+    // Immediate ping on load to wake the server
+    ping();
+    // Then ping every 4 minutes (Render free tier sleeps after 15 min of inactivity)
+    const interval = setInterval(ping, 4 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+}
 
 // Placeholder Pages
 import Home from './pages/Home';
@@ -36,6 +57,7 @@ import BlogManager from './pages/admin/BlogManager';
 import CouponsManager from './pages/admin/CouponsManager';
 import Settings from './pages/admin/Settings';
 function App() {
+  useServerKeepAlive();
   return (
     <Router>
       <Toaster position="top-right" />
